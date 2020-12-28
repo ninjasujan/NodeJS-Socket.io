@@ -1,6 +1,21 @@
 const socket = io();
 const chatForm = document.getElementById("chat-form");
 const chatMessages = document.querySelector(".chat-messages");
+const roomName = document.getElementById("room-name");
+const usersList = document.getElementById("users");
+
+// DOM manipulatin - output room
+
+const outputRoom = (room) => {
+  roomName.innerText = room;
+};
+
+// DOM manipulation - output room users list
+const outputRoomUsers = (users) => {
+  usersList.innerHTML = `${users
+    .map((user) => `<li> ${user.username} </li>`)
+    .join("")}`;
+};
 
 // get username and chat room
 const { username, room } = Qs.parse(location.search, {
@@ -14,7 +29,7 @@ socket.emit("chatRoom", { username, room });
 const outputToDOM = (message) => {
   const div = document.createElement("div");
   div.classList.add("message");
-  div.innerHTML = `<p class="meta">${username} <span>${message.time}</span></p>
+  div.innerHTML = `<p class="meta">${message.username} <span>${message.time}</span></p>
             <p class="text">
               ${message.text}
             </p>`;
@@ -23,8 +38,12 @@ const outputToDOM = (message) => {
 };
 
 socket.on("message", (message) => {
-  console.log(message);
   outputToDOM(message);
+});
+
+socket.on("roomUsers", ({ room, users }) => {
+  outputRoom(room);
+  outputRoomUsers(users);
 });
 
 chatForm.addEventListener("submit", (e) => {
