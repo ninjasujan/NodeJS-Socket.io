@@ -1,0 +1,5 @@
+
+1. QS library to parse the URL query string
+2. Socket programming in NodeJs
+3. Socket connection using NodeJs and bidirectional communication
+4. Broadcast, Muticast and Point to Point communication with socket.io library
